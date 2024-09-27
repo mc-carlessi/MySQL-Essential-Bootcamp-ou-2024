@@ -23,6 +23,9 @@ In this lab, you will:
 
 1. If you are not already connected, open connect to app-srv and install the mysql and mysqlsh clients 
     ```
+    <span style="color:green">shell-app-srv$</span> <copy>ls -l /workshop/linux/client/</copy>
+    ```
+    ```
     <span style="color:green">shell-app-srv$</span> <copy>sudo yum -y install /workshop/linux/client/*.rpm</copy>
     ```
 
@@ -34,7 +37,7 @@ In this lab, you will:
 
 3. Connect to your <span style="color:red">mysql-advanced</span> with admin user
     ```
-    <span style="color:green">shell-app-srv></span> <copy>mysqlsh -uadmin -p -h mysql1 -P 3307 --sql</copy>
+    <span style="color:green">shell-app-srv></span> <copy>mysqlsh admin@mysql1:3307</copy>
     ```
 
 4. Create a new user and restrict the user to your “app-srv.%”. In the real life, you probably use a specific fqdn, here we test a connection with jolly characters 
@@ -56,10 +59,13 @@ In this lab, you will:
         * Please ignore the error "Error during auto-completion cache update: Access denied..." related to lack of privileges for the user. If you want to disable the message disable **autocomplete.nameCache** option  
     
    ```
-   <span style="color:green">shell-app-srv$</span> <copy>mysqlsh -u appuser -p -h mysql1 -P 3307 --sql</copy>
+   <span style="color:green">shell-app-srv$</span> <copy>mysqlsh appuser@mysql1:3307</copy>
    ```
    ```
    <span style="color:blue">mysql></span> <copy>USE world;</copy>
+   ```
+   ```
+   <span style="color:blue">mysql></span> <copy>SHOW TABLES;</copy>
    ```
    ```
    <span style="color:blue">mysql></span> <copy>SELECT * FROM city limit 10;</copy>
@@ -83,7 +89,7 @@ In this lab, you will:
     <span style="color:blue">mysql></span> <copy>\q</copy>
     ```
     ```
-    <span style="color:green">shell-app-srv$</span> <copy>mysqlsh -u appuser -p -h mysql1 -P 3307 --sql</copy>
+    <span style="color:green">shell-app-srv$</span> <copy>mysqlsh appuser@mysql1:3307</copy>
     ```
     ```
     <span style="color:blue">mysql></span> <copy>SHOW DATABASES;</copy>
@@ -150,11 +156,12 @@ In this lab, you will:
 
 18. (<span style="color:red">appuser connection</span>) Close and reopen connection to mysql-advanced and try to submit a command.  
     What changed?
+
     ```
     <span style="color:blue">mysql></span> <copy>\q</copy>
     ```
     ```
-    <span style="color:green">shell-app-srv$</span> <copy>mysqlsh -uappuser -p -h mysql1 -P 3307 --sql</copy>
+    <span style="color:green">shell-app-srv$</span> <copy>mysqlsh appuser@mysql1:3307</copy>
     ```
     ```
     <span style="color:blue">mysql></span> <copy>SHOW DATABASES;</copy>
@@ -175,7 +182,7 @@ In this lab, you will:
 
 2. Reconnect to MySQL instance as <span style="color:red">admin</span> to create a new user
     ```
-    <span style="color:green">shell></span> <copy>mysqlsh -uadmin -p -h mysql1 -P 3307 --sql</copy>
+    <span style="color:green">shell></span> <copy>mysqlsh admin@mysql1:3307</copy>
     ```
     ```
     <span style="color:blue">mysql></span> <copy>CREATE USER 'appuser2'@'%' IDENTIFIED BY 'Welcome1!';</copy>
@@ -207,7 +214,7 @@ In this lab, you will:
 
 6. Connect now as <span style="color:red">appuser2</span> and submit some commands (you receive errors, why?)
     ```
-    <span style="color:green">shell></span> <copy>mysqlsh -u appuser2 -p -h mysql1 -P 3307 --sql</copy>
+    <span style="color:green">shell></span> <copy>mysqlsh appuser2@mysql1:3307</copy>
     ```
     ```
     <span style="color:blue">mysql></span> <copy>SHOW DATABASES;</copy>

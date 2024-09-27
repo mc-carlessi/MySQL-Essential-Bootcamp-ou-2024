@@ -33,7 +33,7 @@ In this lab, you will:
     To simplify user creations we have a script with minimal grants for this user (see the manual for additional privileges required for specific features like TTS, SBT integration, encrypted). You can also have a look on the privileges opening the file /workshop/support/mysqlbackup_user_grants.sql
 
     ```
-    <span style="color:green">shell></span> <copy>mysqlsh -uadmin -p -h mysql1 -P 3307 --sql</copy>
+    <span style="color:green">shell></span> <copy>mysqlsh admin@mysql1:3307</copy>
     ```
     ```
     <span style="color:blue">mysql></span> <copy>CREATE USER 'mysqlbackup'@'%' IDENTIFIED BY 'Welcome1!';</copy>
@@ -47,23 +47,15 @@ In this lab, you will:
 
 4. Create a full backup 
     ```
-    <span style="color:green">shell></span> <copy>mysqlbackup --port=3307 --host=127.0.0.1 --protocol=tcp --user=mysqlbackup --password --backup-dir=/backupdir/full backup-and-apply-log</copy>
+    <span style="color:green">shell></span> <copy>mysqlbackup --port=3307 --host=127.0.0.1 --user=mysqlbackup --password --backup-dir=/backupdir/full backup-and-apply-log</copy>
     ```
 
 5. Create a second backup with compression 
     ```
-    <span style="color:green">shell></span> <copy>mysqlbackup --port=3307 --host=127.0.0.1 --protocol=tcp --user=mysqlbackup --password --backup-dir=/backupdir/compressed --compress backup-and-apply-log</copy>
+    <span style="color:green">shell></span> <copy>mysqlbackup --port=3307 --host=127.0.0.1 --user=mysqlbackup --password --backup-dir=/backupdir/compressed --compress backup-and-apply-log</copy>
     ```
 
-6. Because these backups are created with sudo, change the permissions
-    ```
-    <span style="color:green">shell></span> <copy>sudo chown -R mysqluser:mysqlgrp /backupdir/full</copy>
-    ```
-    ```
-    <span style="color:green">shell></span> <copy>sudo chown -R mysqluser:mysqlgrp /backupdir/compressed</copy>
-    ```
-
-7. Have a look of the content of the backup folders
+6. Have a look of the content of the backup folders
     ```
     <span style="color:green">shell></span> <copy>cd /backupdir/full</copy>
     ```
@@ -77,7 +69,8 @@ In this lab, you will:
     <span style="color:green">shell></span> <copy>ls -l</copy>
     ```
 
-8. Check the size of the two backups, the one uncompressed and the one compressed
+7. Check the size of the two backups, the one uncompressed and the one compressed
+
     ```
     <span style="color:green">shell></span> <copy>cd /backupdir</copy>
     ```
@@ -112,13 +105,13 @@ In this lab, you will:
     <span style="color:green">shell></span> <copy>sudo chmod -R 750 /mysql/binlog</copy>
     ```
 
-3. Restore the backup 
+4. Restore the backup 
     We execute mysqlbackup as root because of permission in destination folders
     ```
-    <span style="color:green">shell></span> <copy>sudo /mysql/mysql-latest/bin/mysqlbackup --defaults-file=/mysql/etc/my.cnf --backup-dir=/backupdir/full/ --datadir=/mysql/data --log-bin=/mysql/binlog/binlog copy-back</copy>
+    <span style="color:green">shell></span> <copy>sudo /mysql/mysql-latest/bin/mysqlbackup --defaults-file=/mysql/etc/my.cnf --backup-dir=/backupdir/full/ copy-back</copy>
     ```
 
-4. Rename backup-auto.cnf, backup-mysqld-auto.cnf
+5. Rename backup-auto.cnf, backup-mysqld-auto.cnf
     ```
     <span style="color:green">shell></span> <copy>sudo mv /mysql/data/backup-auto.cnf /mysql/data/auto.cnf</copy>
     ```
@@ -126,7 +119,7 @@ In this lab, you will:
     <span style="color:green">shell></span> <copy>sudo mv /mysql/data/backup-mysqld-auto.cnf /mysql/data/mysqld-auto.cnf</copy>
     ```
 
-5. Set the ownership and privileges
+6. Set the ownership and privileges
     ```
     <span style="color:green">shell></span> <copy>sudo chown -R mysqluser:mysqlgrp /mysql/data /mysql/binlog</copy>
     ```
@@ -134,12 +127,13 @@ In this lab, you will:
     <span style="color:green">shell></span> <copy>sudo chmod -R 750 /mysql/data /mysql/binlog</copy>
     ```
 
-6. Start the server and verify the data
+7. Start the server and verify the data
+
     ```
     <span style="color:green">shell></span> <copy>sudo systemctl start mysqld-advanced</copy>
     ```
     ```
-    <span style="color:green">shell></span> <copy>mysqlsh -uadmin -p -h mysql1 -P 3307 --sql</copy>
+    <span style="color:green">shell></span> <copy>mysqlsh admin@mysql1:3307</copy>
     ```
     ```
     <span style="color:blue">mysql></span> <copy>SHOW DATABASES;</copy>

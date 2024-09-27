@@ -53,11 +53,15 @@ If not already connected to app-srv and mysql1 then do the following
     ```
 
 4. Export employees database
+
     ```
     <span style="color:green">shell></span> <copy>mysqldump -uadmin -p -hmysql1 -P3307 --single-transaction --set-gtid-purged=OFF --databases employees > /mysql/exports/employees.sql</copy>
     ```
+    ```
+    <span style="color:green">shell></span> <copy>ls -l /mysql/exports/employees.sql</copy>
+    ```
 
-5. Drop employees database
+5. Drop employees database, using the mysql client
     ```
     <span style="color:green">shell></span> <copy>mysql -uadmin -p -hmysql1 -P3307</copy>
     ```
@@ -84,6 +88,7 @@ If not already connected to app-srv and mysql1 then do the following
     ```
 
 7. Exit from mysql client
+
     ```
     <span style="color:blue">mysql></span> <copy>exit</copy>
     ```
@@ -91,31 +96,47 @@ If not already connected to app-srv and mysql1 then do the following
 ## Task 2: MySQL Shell
 1. Connect with MySQL Shell
     ```
-    <span style="color:green">shell></span> <copy>mysqlsh -h127.0.0.1 -P3307 -uadmin -p </copy>
+    <span style="color:green">shell></span> <copy>mysqlsh admin@mysql1:3307</copy>
     ```
 
-2. Export employees database.  
+2. Export employees database using javascript command mode.  
     Please **note the time required** with the default 4 threads.
+    ```
+    <span style="color:blue">My</span><span style="color: orange">SQL </span><span style="background-color:orange">SQL</span>><copy>\js</copy>
+    ```
     ```
     <span style="color:blue">My</span><span style="color: orange">SQL </span><span style="background-color:yellow">JS</span>><copy>util.dumpSchemas(['employees'],'/mysql/exports/employees')</copy>
     ```
-3. Check the content of the directory /mysql/exports/employees
 
-4. Drop employees database
+3. Check the content of the directory /mysql/exports/employees
     ```
-    <span style="color:blue">My</span><span style="color: orange">SQL </span><span style="background-color:yellow">JS</span>><copy>\sql drop database employees</copy>
+    <span style="color:blue">My</span><span style="color: orange">SQL </span><span style="background-color:yellow">JS</span>><copy>\q</copy>
     ```
     ```
-    <span style="color:blue">My</span><span style="color: orange">SQL </span><span style="background-color:yellow">JS</span>><copy>\sql show databases;</copy>
+    <span style="color:green">shell></span> <copy>ls -l /mysql/exports/employees</copy>
+    ```
+
+4. Reconnect mysqlsh and drop employees database
+    ```
+    <span style="color:green">shell></span> <copy>mysqlsh admin@mysql1:3307</copy>
+    ```
+    ```
+    <span style="color:blue">My</span><span style="color: orange">SQL </span><span style="background-color:orange">SQL</span>><copy> drop database employees;</copy>
+    ```
+    ```
+    <span style="color:blue">My</span><span style="color: orange">SQL </span><span style="background-color:orange">SQL</span>><copy> show databases;</copy>
     ```
 
 5. Load files is disabled by default, so enable it now to let MysQL Shell execute the load
     ```
-    <span style="color:blue">My</span><span style="color: orange">SQL </span><span style="background-color:yellow">JS</span>><copy>\sql set persist local_infile=ON;</copy>
+    <span style="color:blue">My</span><span style="color: orange">SQL </span><span style="background-color:orange">SQL</span>><copy> set persist local_infile=ON;</copy>
     ```
 
-6. Re import the employees database.  
+6. Switch now in javascript command mode and re import the employees database.  
     Please **note the time required** with the default 4 threads.
+    ```
+    <span style="color:blue">My</span><span style="color: orange">SQL </span><span style="background-color:orange">SQL</span>><copy> \js</copy>
+    ```
     ```
     <span style="color:blue">My</span><span style="color: orange">SQL </span><span style="background-color:yellow">JS</span>><copy>util.loadDump('/mysql/exports/employees')</copy>
     ```
@@ -127,8 +148,13 @@ If not already connected to app-srv and mysql1 then do the following
     ```
 
 7. We can also calculate the time with mysqldump. To use mysqldump in a more secure way we store the credential in login-path file (discussed in the module dedicated to security)
+    * Let's create the login-path
     ```
     <span style="color:green">shell></span> <copy>mysql_config_editor set --login-path=mysql1 --host=mysql1 --port=3307 --user=admin --password</copy>
+    ```
+    * Let's test the login-path
+    ```
+    <span style="color:green">shell></span> <copy>mysql --login-path=mysql1 -e "SHOW DATABASES"</copy>
     ```
 
 8. Now we can test the export.  
@@ -147,6 +173,7 @@ If not already connected to app-srv and mysql1 then do the following
 
 10. And we can check the import time.  
     Please **compare the mysql import time** with the MysQL load.
+
     ```
     <span style="color:blue">mysql></span> <copy>time mysql --login-path=mysql1 < /mysql/exports/employees_time_test.sql</copy>
     ```
