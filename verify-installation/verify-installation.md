@@ -1,4 +1,4 @@
-# Verify the new MySQL Installation on Linux and import test databases
+# Import sample databases and play with the MySQL connection
 
 ## Introduction
 In this lab you will verify and start using your new MySQL Installation
@@ -34,10 +34,8 @@ In this lab, you will:
     <span style="color:green">shell-mysql1></span> <copy>mysql -uadmin -p -P3307 -h mysql1 < ./employees.sql</copy>
     ```
 
-4. Check that we have now the world and employees demo databases in our instance  
-    ```
-    <span style="color:green">shell-mysql1></span> <copy>cd /workshop/databases/employees</copy>
-    ```
+4. Check that we have now the world and employees demo databases in our instance
+
     ```
     <span style="color:green">shell-mysql1></span> <copy>mysql -uadmin -p -P3307 -h mysql1 -e "SHOW DATABASES"</copy>
     ```
@@ -72,18 +70,20 @@ In this lab, you will:
   | <span style="color:green">shell></span> mysql -u root -p -h **127.0.0.1** -P **3307** <br> <span style="color:blue"> mysql></span> status; |   |   |   |
   | <span style="color:green">shell></span> mysql -u **admin** -p -h **mysql1** -P **3307** <br> <span style="color:blue"> mysql></span> status; |   |   |   |
 
+3. We can now exit from mysql connection and return to OS shell
+
+    ```
+    <span style="color:blue">mysql></span> <copy>\q</copy>
+    ```
+
+
 ## Task 3: Remove Community installation
 
-1. Now that we better understood how to connect, we can remove the community installation and refresh PATH cache 
+1. Now that we better understood how to connect, we can remove the community installation
+ 
     ```
     <span style="color:green">shell-mysql1></span> <copy>sudo yum remove mysql mysql-server</copy>
     ```
-
-2. Exit from mysql1 connection
-    ```
-    <span style="color:green">shell-mysql1></span><copy>exit</copy>
-    ```
-
 
 
 ## Acknowledgements

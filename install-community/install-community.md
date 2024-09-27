@@ -50,33 +50,27 @@ In this lab, you will be guided through the following tasks:
 
     As you have seen, above command try to install MariaDB sw. Each distribution has its own repositories and different choices for the packages to install.
 
-6. Because a non-updated PGPkey please run
-
+6. Oracle Linux 8 already have the official MySQL repository, but to show you how to do it, we re-install it from https://dev.mysql.com/downloads/
     ```
-    <span style="color:green">shell-mysql1></span> <copy>sudo rpm --import https://repo.mysql.com/RPM-GPG-KEY-mysql-2023</copy>
-    ```
-
-7. Oracle Linux 8 already have the official MySQL repository, but to show you how to do it, we re-install it from https://dev.mysql.com/downloads/
-    ```
-    <span style="color:green">shell-mysql1></span> <copy>sudo yum -y install https://dev.mysql.com/get/mysql80-community-release-el8-1.noarch.rpm</copy>
+    <span style="color:green">shell-mysql1></span> <copy>sudo yum -y install https://dev.mysql.com/get/mysql84-community-release-el8-1.noarch.rpm</copy>
     ```
 
-8. Update repository database with the new references
+7. Update repository database with the new references
     ```
     <span style="color:green">shell-mysql1></span> <copy>sudo yum repolist all</copy>
     ```
 
-9. Disable the use of OL default repository, to force the usage of one just installed   
+8. Disable the use of OL default repository, to force the usage of one just installed   
     ```
-    <span style="color:green">shell-mysql1> </span><copy>sudo yum module disable mysql</copy>
+    <span style="color:green">shell-mysql1> </span><copy>sudo yum -y module disable mysql</copy>
     ```
 
-10. Now install the mysql-client and note that there is not anymore reference to third party components
+9. Now install the mysql-client and note that there is not anymore reference to third party components
     ```
     <span style="color:green">shell-mysql1> </span><copy>sudo yum install mysql</copy>
     ```
 
-11. If only mysql packages are shown, confirm the installation.
+10. If only mysql packages are shown, confirm the installation.
 
 ## Task 2: Install MySQL Community Server
 

@@ -80,32 +80,38 @@ Create a new user/group for your MySQL service (mysqluser/mysqlgrp) and a add �
     <span style="color:green">shell-mysql1></span> <copy>sudo mkdir /mysql/ /mysql/etc /mysql/data /mysql/log /mysql/temp /mysql/binlog</copy>
     ```
 
-8. Extract the tarball in your /mysql folder
+8. We have the binary files inside our /workshop directory in a compressed tar
+    ```
+    <span style="color:green">shell-mysql1></span> <copy>ls -l /workshop/linux/mysql-commercial-8.*-x86_64.tar.xz</copy>
+    ```
+
+
+9. Extract the tarball in your /mysql folder
     ```
     <span style="color:green">shell-mysql1></span> <copy>cd /mysql/ </copy>
     ```
     ```
-    <span style="color:green">shell-mysql1></span> <copy>sudo tar xvf /workshop/linux/mysql-commercial-8.0.*-linux-glibc2.12-x86_64.tar.xz</copy>
+    <span style="color:green">shell-mysql1></span> <copy>sudo tar xvf /workshop/linux/mysql-commercial-8.*-x86_64.tar.xz</copy>
     ```
 
-9. Create a symbolic link to mysql binary installation
+10. Create a symbolic link to mysql binary installation
     ```
-    <span style="color:green">shell-mysql1></span> <copy>sudo ln -s mysql-commercial-8.0.*-x86_64 mysql-latest </copy>
+    <span style="color:green">shell-mysql1></span> <copy>sudo ln -s mysql-commercial-8.*-x86_64 mysql-latest </copy>
     ```
 
-10. Create a new configuration file <span style="color:red"> my.cnf </span> inside /mysql/etc
+11. Create a new configuration file <span style="color:red"> my.cnf </span> inside /mysql/etc
 To help you we created one with some variables, please copy it
     ```
     <span style="color:green">shell-mysql1></span> <copy>sudo cp /workshop/support/my.cnf.mysql1 /mysql/etc/my.cnf </copy>
     ```
 
-11. Check the content of the configuration file to have a look inside.
+12. Check the content of the configuration file to have a look inside.
     Please note that, because the port 3306 is already in use by the community server previously installed , we use now port 3307.
     ```
     <span style="color:green">shell-mysql1></span> <copy>cat /mysql/etc/my.cnf </copy>
     ```
 
-12. For security reasons change ownership and permissions
+13. For security reasons change ownership and permissions
     ```
     <span style="color:green">shell-mysql1></span> <copy>sudo chown -R mysqluser:mysqlgrp /mysql </copy>
     ```
@@ -117,17 +123,17 @@ To help you we created one with some variables, please copy it
     <span style="color:green">shell-mysql1></span> <copy>sudo chmod -R 770 /mysql/etc </copy>
     ```
 
-13. Save the changes, log out and log in again from the ssh for the changes to take effect on the user profile.initialize your database
+14. Save the changes, log out and log in again from the ssh for the changes to take effect on the user profile.initialize your database
     ```
     <span style="color:green">shell-mysql1></span> <copy>sudo /mysql/mysql-latest/bin/mysqld --defaults-file=/mysql/etc/my.cnf --initialize --user=mysqluser </copy>
     ```
 
-14. Start your new mysql instance
+15. Start your new mysql instance
     ```
     <span style="color:green">shell-mysql1></span> <copy>sudo /mysql/mysql-latest/bin/mysqld --defaults-file=/mysql/etc/my.cnf --user=mysqluser & </copy>
     ```
 
-15. Verify that process is running
+16. Verify that process is running
     ```
     <span style="color:green">shell-mysql1></span> <copy>ps -ef | grep mysqld </copy>
     ```
@@ -135,17 +141,17 @@ To help you we created one with some variables, please copy it
     <span style="color:green">shell-mysql1></span> <copy>netstat -an | grep 3307 </copy>
     ```
 
-16. Another way is searching the message “ready for connections” in error log as one of the last
+17. Another way is searching the message “ready for connections” in error log as one of the last
     ```
     <span style="color:green">shell-mysql1></span> <copy>grep -i ready /mysql/log/err_log.log </copy>
     ```
 
-17. Retrieve root password for first login
+18. Retrieve root password for first login
     ```
     <span style="color:green">shell-mysql1></span> <copy>grep -i 'temporary password' /mysql/log/err_log.log</copy>
     ```
 
-18. Login to your mysql-advanced using the temporary password and set the new one
+19. Login to your mysql-advanced using the temporary password and set the new one
     ```
     <span style="color:green">shell-mysql1></span> <copy>mysql -uroot -p -h 127.0.0.1 -P3307</copy>
     ```
@@ -153,12 +159,12 @@ To help you we created one with some variables, please copy it
     <span style="color:blue">mysql></span> <copy>SET PASSWORD='Welcome1!';</copy>
     ```
 
-19. Check server status.
+20. Check server status.  
     ```
     <span style="color:blue">mysql></span> <copy>status</copy>
     ```
 
-20. Shutdown the service
+21. Shutdown the service  
     ```
     <span style="color:blue">mysql></span> <copy>exit</copy>
     ```
@@ -166,8 +172,10 @@ To help you we created one with some variables, please copy it
     <span style="color:green">shell-mysql1></span> <copy>mysqladmin -uroot -h127.0.0.1 -p -P3307 shutdown</copy>
     ```
 
-21. Configure automatic startup and shutdown with system.
-    Add a systemd service unit configuration file with details about the MySQL service. The file is named mysqld.service and is placed in /usr/lib/systemd/system. We created one for you (See addendum for the content)
+22. Configure automatic startup and shutdown with system, adding a systemd service unit configuration file with details about the MySQL service.
+
+    The file is named mysqld.service and is placed in /usr/lib/systemd/system. We created one for you (See addendum for the content)
+
     ```
     <span style="color:green">shell-mysql1></span> <copy>sudo cp /workshop/support/mysqld-advanced.service /usr/lib/systemd/system/</copy>
     ```
@@ -178,7 +186,8 @@ To help you we created one with some variables, please copy it
     <span style="color:green">shell-mysql1></span> <copy>sudo systemctl enable mysqld-advanced.service</copy>
     ```
 
-22. Test start, stop and restart
+23. Test start, stop and restart
+
     ```
     <span style="color:green">shell-mysql1></span> <copy>sudo systemctl start mysqld-advanced</copy>
     ```
@@ -197,7 +206,8 @@ To help you we created one with some variables, please copy it
     ```
     <span style="color:green">shell-mysql1></span> <copy>sudo systemctl status mysqld-advanced</copy>
     ```
-23. Create a new administrative user called 'admin' with remote access and full privileges
+24. Create a new administrative user called 'admin' with remote access and full privileges
+
     ```
     <span style="color:green">shell-mysql1></span> <copy>mysql -uroot -p -h 127.0.0.1 -P3307</copy>
     ```
@@ -207,7 +217,9 @@ To help you we created one with some variables, please copy it
     ```
     <span style="color:blue">mysql></span> <copy>GRANT ALL PRIVILEGES ON *.* TO 'admin'@'%' WITH GRANT OPTION;</copy>
     ```
-24. In the configuration file was specified to load the commercial Thread Pool Plugin, now let's check if it’s loaded and active. We can use different commands, please note that the last two are the same query with a different line terminator (“;” vs “\G” show output in a different format)
+25. In the configuration file was specified to load the commercial Thread Pool Plugin, now let's check if it’s loaded and active.  
+    We can use different commands, please note that the last two are the same query with a different line terminator (“;” vs “\G” show output in a different format)
+
     ```
     <span style="color:blue">mysql></span> <copy>SHOW PLUGINS;</copy>
     ```

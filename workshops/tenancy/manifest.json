@@ -8,7 +8,7 @@
             "filename": "../../introduction/introduction.md"
         },
         {
-            "title": "Lab 1: Download material and test lab connection ",
+            "title": "Lab 1: Download material and test lab connection",
             "description": "First steps",
             "filename": "../../get-started/get-started.md"
         },
@@ -21,7 +21,7 @@
             "filename": "../../installation-detailed/installation-detailed.md"
         },
         {
-            "title": "Lab 2c: Verify the new MySQL Installation",
+            "title": "Lab 2c: Import sample databases and play with the MySQL connection",
             "filename": "../../verify-installation/verify-installation.md"
         },
         {
@@ -31,10 +31,6 @@
         {
             "title": "Lab 3a: Database Design",
             "filename": "../../database-design/database-design.md"
-        },
-        {
-            "title": "Lab 3b: JSON datatype and MySQL Document Store",
-            "filename": "../../database-design-json/database-design-json.md"
         },
         {
             "title": "Lab 4a: User management and roles",
