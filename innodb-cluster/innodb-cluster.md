@@ -26,7 +26,7 @@ In this lab, you will:
 ## Task 1: Check data model and prepare instances
 1. From **app-srv**, connect the client to mysql1 and verify data model compatibility with Group replication requirements. If needed, fix the errors
     ```
-    <span style="color:green">shell-app-srv$</span> <copy>mysqlsh -uadmin -p -h mysql1 -P 3307 --sql</copy>
+    <span style="color:green">shell-app-srv$</span> <copy>mysqlsh admin@mysql1:3307</copy>
     ```
 
 2. Search non InnoDB tables and if there are you must change them. <span style="color:red">For this lab just drop them</span>
@@ -76,44 +76,55 @@ In this lab, you will:
     ```
 
 5. We use mysql1 as primary, but we need a second instance. For this we can use mysql2. Just stop replication
+
     * Connect your client to mysql2 with administrative account
-        ```
-        <span style="color:green">shell-app-srv$</span> <copy>mysqlsh -uadmin -p -h mysql2 -P 3307 --sql</copy>
-        ```
+    ```
+    <span style="color:green">shell-app-srv$</span> <copy>mysqlsh admin@mysql2:3307</copy>
+    ```
+
     * Stop and remove the replication settings
-        ```
-        <span style="color:blue">mysql-secondary-1></span> <copy>stop replica;</copy>
-        ```
-        ```
-        <span style="color:blue">mysql-secondary-1></span> <copy>reset replica all;</copy>
-        ```
-        ```
-        <span style="color:blue">mysql-secondary-1></span> <copy>\q</copy>
-        ```
+    ```
+    <span style="color:blue">mysql-secondary-1></span> <copy>stop replica;</copy>
+    ```
+    ```
+    <span style="color:blue">mysql-secondary-1></span> <copy>reset replica all;</copy>
+    ```
+    ```
+    <span style="color:blue">mysql-secondary-1></span> <copy>SHOW REPLICA STATUS;</copy>
+    ```
+    ```
+    <span style="color:blue">mysql-secondary-1></span> <copy>\q</copy>
+    ```
 
 6. Now we need a third instance. We install now a fresh one on mysql3 
-    1. Connect to <span style="color:red">mysql3</span> through app-srv
-        ```
-        <span style="color:green">shell-app-srv$</span> <copy>ssh -i $HOME/sshkeys/id_rsa_mysql3 opc@mysql3</copy>
-        ```
-    2. Execute below script that replicate what we did in manual installation lab (create mysqluser/mysqlgrp, folders and install binaries and enterprise plugins, create the admin user)
-        ```
-        <span style="color:green">shell-mysql3></span> <copy>/workshop/support/MySQL_InnoDB_Cluster___secondary_on_mysql3.sh</copy>
-        ```
-7. The instance on mysql3 is new, so let's verify that everything is fine
-    1. Connect to the instance
-        ```
-        <span style="color:green">shell-mysql3></span> <copy>mysqlsh -uadmin -p -h mysql3 -P 3307 --sql</copy>
-        ```
+    * Connect to <span style="color:red">mysql3</span> through app-srv
+    ```
+    <span style="color:green">shell-app-srv$</span> <copy>ssh -i $HOME/sshkeys/id_rsa_mysql3 opc@mysql3</copy>
+    ```
 
-    2. Verify that the instance is empty
-        ```
-        <span style="color:blue">mysql3></span> <copy>SHOW DATABASES;</copy>
-        ```
+    * Execute below script that replicate what we did in manual installation lab (create mysqluser/mysqlgrp, folders and install binaries and enterprise plugins, create the admin user)
+    ```
+    <span style="color:green">shell-mysql3></span> <copy>/workshop/support/MySQL_InnoDB_Cluster___secondary_on_mysql3.sh</copy>
+    ```
+
+7. The instance on mysql3 is new, so let's verify that everything is fine
+    * Connect to the instance
+    ```
+    <span style="color:green">shell-mysql3></span> <copy>mysqlsh admin@mysql3:3307</copy>
+    ```
+
+    * Verify that the instance is empty
+    ```
+    <span style="color:blue">mysql3></span> <copy>SHOW DATABASES;</copy>
+    ```
 
 8. Now exit from mysql2 and mysql3 shells, we don't need them anymore. 
+
     ```
     <span style="color:blue">mysql3></span> <copy>\q</copy>
+    ```
+    ```
+    <span style="color:green">shell-mysql3></span> <copy>exit</copy>
     ```
 
 
@@ -124,7 +135,10 @@ In this lab, you will:
     <span style="color:green">shell-app-srv$ </span> <copy>mysqlsh</copy>
     ```
 
-2. Check the instance configuration
+2. Check the instance configuration using javascipt command mode
+    ```
+    <span style="color:blue">My</span><span style="color: orange">SQL </span><span style="background-color:orange">SQL</span>> <copy>\js</copy>
+    ```
     ```
     <span style="color:blue">My</span><span style="color: orange">SQL </span><span style="background-color:yellow">JS</span>> <copy>dba.checkInstanceConfiguration('admin@mysql1:3307')</copy>
     ```
@@ -348,9 +362,9 @@ In this lab, you will:
 
 7. Add now the instance on mysql3 to the cluster
     * Use the same command as before to add the instance. But now we received an alert about incorrect GTID set (please remember that the this instance is empty).
-        ```
-        <span style="color:blue">My</span><span style="color: orange">SQL </span><span style="background-color:yellow">JS</span>> <copy>cluster.addInstance('admin@mysql3:3307')</copy>
-        ```
+    ```
+    <span style="color:blue">My</span><span style="color: orange">SQL </span><span style="background-color:yellow">JS</span>> <copy>cluster.addInstance('admin@mysql3:3307')</copy>
+    ```
 
     **OUTPUT EXAMPLE: ADD 3 INSTANCE GTID WARNING (EXTRACT)**
         ```
@@ -425,24 +439,23 @@ In this lab, you will:
     }
     ```
 
-12. Now cluster is up and running, and we can exit from MySQL Shell
+9. Now cluster is up and running, and we can exit from MySQL Shell
+
     ```
     <span style="color:blue">My</span><span style="color: orange">SQL </span><span style="background-color:yellow">JS</span>> <copy>\q</copy>
     ```
 
 
 ## Task 4: Deploy MySQL Router
-> **Note:** 
-* By default MySQL router uses mysql\_native\_password (deprecated) for its user, we force the usage of the new chaching_sha2 with the option "--force-password-validation" at bootstrap time.
 
 1.  Install MySQL Router via rpm package
     ```
-    <span style="color:green">shell-app-srv$</span> <copy>sudo yum -y install /workshop/linux/mysql-router-commercial-8.0.*.x86_64.rpm</copy>
+    <span style="color:green">shell-app-srv$</span> <copy>sudo yum -y install /workshop/linux/mysql-router-commercial-8.*.x86_64.rpm</copy>
     ```
 
 2. Configure MySQL Router
     ```
-    <span style="color:green">shell-app-srv$</span> <copy>sudo mysqlrouter --bootstrap admin@mysql1:3307 --user=mysqlrouter --force-password-validation</copy>
+    <span style="color:green">shell-app-srv$</span> <copy>sudo mysqlrouter --bootstrap admin@mysql1:3307 --user=mysqlrouter</copy>
     ```
 
     Have a look on the output, note the following:
@@ -457,7 +470,7 @@ In this lab, you will:
 4. Test the connection with a mysql client connect to 6446 port (read/write). To which server are you currently connected? Can you change the content?
 
     ```
-    <span style="color:green">shell-app-srv$</span> <copy>mysqlsh -uadmin -p -h127.0.0.1 -P6446 --sql</copy>
+    <span style="color:green">shell-app-srv$</span> <copy>mysqlsh admin@127.0.0.1:6446</copy>
     ```
     ```
     <span style="color:blue">mysql-rw></span> <copy>SELECT @@hostname, @@port;</copy>
@@ -485,9 +498,11 @@ In this lab, you will:
     ```
 
 5. The second port of MySQL Router is used for read only sessions. Close session and re open on port 6447 (read only port).
+
     To which server are you currently connected? Can you change the content?
+
     ```
-    <span style="color:green">shell-app-srv$</span> <copy>mysqlsh -uadmin -p -h127.0.0.1 -P6447 --sql</copy>
+    <span style="color:green">shell-app-srv$</span> <copy>mysqlsh admin@127.0.0.1:6447</copy>
     ```
     ```
     <span style="color:blue">mysql-ro></span> <copy>SELECT @@hostname, @@port;</copy>
@@ -507,7 +522,8 @@ In this lab, you will:
     ```
     <span style="color:blue">mysql-ro></span> <copy>\q</copy>
     ```
-6. Reconnect to primary instance through the router. <span style="color:red">Please keep this session open!</span>. 
+6. Reconnect to primary instance through the router. <span style="color:red">Please keep this session open!</span>.
+
     We use here the mysql client to use its reconnect feature. 
     ```
     <span style="color:green">shell-app-srv$</span> <copy>mysql -uadmin -p -h127.0.0.1 -P6446</copy>
@@ -515,35 +531,41 @@ In this lab, you will:
     ```
     <span style="color:blue">mysql-rw></span> <copy>SELECT @@hostname, @@port;</copy>
     ```
+
 7. <span style="color:red">Open a second SSH connection</span> to mysql1 and simulate a crash killing primary instance.
     * Retrieve process ID
-        ```
-        <span style="color:green">shell-app-srv$</span> <copy>ssh -i $HOME/sshkeys/id_rsa_mysql1 opc@mysql1</copy>
-        ```
-        ```
-        <span style="color:green">shell-mysql1></span> <copy>cat /mysql/data/*.pid</copy>
-        ```
+    ```
+    <span style="color:green">shell-app-srv$</span> <copy>ssh -i $HOME/sshkeys/id_rsa_mysql1 opc@mysql1</copy>
+    ```
+    ```
+    <span style="color:green">shell-mysql1></span> <copy>cat /mysql/data/*.pid</copy>
+    ```
     * then kill the process of primary instance to simulate a crash
-        ```
-        <span style="color:green">shell-mysql1></span> <copy>sudo kill -9 <process id from previous step></copy>
-        ```
-8. Now <span style="color:red">return to mysql connection previously opened</span> and verify if it works. It may requires 15/20 seconds to be online.
-        ```
-        <span style="color:blue">mysql-rw></span> <copy>SELECT @@hostname, @@port;</copy>
-        ```
-        ```
-        <span style="color:blue">mysql-rw></span> <copy>SELECT @@hostname, @@port;</copy>
-        ```
-        ```
-        <span style="color:blue">mysql-rw></span> <copy>INSERT INTO newdb.newtable VALUES(30);</copy>
-        ```
-        ```
-        <span style="color:blue">mysql-rw></span> <copy>SELECT * from newdb.newtable;</copy>
-        ```
+    ```
+    <span style="color:green">shell-mysql1></span> <copy>sudo kill -9 <process id from previous step></copy>
+    ```
 
-9. From the shell where you killed the instance use MySQL Shell to verify cluster status (of course connect to a living instance)
+8. Now <span style="color:red">return to mysql connection previously opened</span> and verify if it works. It may requires 15/20 seconds to be online.
+    ```
+    <span style="color:blue">mysql-rw></span> <copy>SELECT @@hostname, @@port;</copy>
+    ```
+    ```
+    <span style="color:blue">mysql-rw></span> <copy>SELECT @@hostname, @@port;</copy>
+    ```
+    ```
+    <span style="color:blue">mysql-rw></span> <copy>INSERT INTO newdb.newtable VALUES(30);</copy>
+    ```
+    ```
+    <span style="color:blue">mysql-rw></span> <copy>SELECT * from newdb.newtable;</copy>
+    ```
+
+9. From the shell where you killed the instance use MySQL Shell to verify cluster status (of course connect to a living instance) using javascipt command mode
+
     ```
     <span style="color:green">shell-app-srv$</span> <copy>mysqlsh</copy>
+    ```
+    ```
+    <span style="color:blue">My</span><span style="color: orange">SQL </span><span style="background-color:orange">SQL</span>> <copy>\js</copy>
     ```
     ```
     <span style="color:blue">My</span><span style="color: orange">SQL </span><span style="background-color:yellow">JS</span>> <copy>\c admin@mysql1:3307</copy>
