@@ -39,23 +39,10 @@ In this lab, you will:
 
 3. Search InnoDB tables without primary or unique key. In production you must fix.
     ```
-    <span style="color:blue">mysql-primary></span> <copy>SELECT tables.table_schema, tables.table_name, tables.engine, tables.table_rows
-    FROM information_schema.tables
-        LEFT JOIN (select table_schema, table_name
-        FROM information_schema.statistics
-        GROUP BY table_schema, table_name, index_name HAVING
-        SUM(CASE
-                WHEN non_unique = 0
-                AND nullable != 'YES' then 1 ELSE 0
-                END
-            ) = count(*)
-        ) puks
-        ON tables.table_schema = puks.table_schema
-        AND tables.table_name = puks.table_name 
-    WHERE puks.table_name is null
-        AND tables.table_type = 'BASE TABLE'
-        AND engine='InnoDB'
-        AND tables.table_schema NOT IN ('information_schema', 'mysql', 'performance_schema');</copy>
+    <span style="color:blue">mysql-primary></span> <copy>SELECT i.TABLE_ID, t.NAME as "DATABASE/TABLE" 
+        FROM INFORMATION_SCHEMA.INNODB_INDEXES i JOIN INFORMATION_SCHEMA.INNODB_TABLES t
+            ON (i.TABLE_ID = t.TABLE_ID) 
+        WHERE i.NAME='GEN_CLUST_INDEX';</copy>
     ```
 
 4. Most probably we have the table world.city_part without primary key. So let's fix it
