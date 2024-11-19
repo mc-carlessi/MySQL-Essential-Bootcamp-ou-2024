@@ -29,35 +29,35 @@
             "filename": "../../mysql-shell/mysql-shell.md"
         },
         {
-            "title": "Lab 3a: Database Design",
+            "title": "Lab 3: Database Design",
             "filename": "../../database-design/database-design.md"
         },
         {
-            "title": "Lab 4a: User management and roles",
+            "title": "Lab 4: User management and roles",
             "filename": "../../user-management/user-management.md"
         },
         {
-            "title": "Lab 4b: MySQL Enterprise Security",
+            "title": "Lab 5: MySQL Enterprise Security",
             "filename": "../../enterprise-security/enterprise-security.md"
         },
         {
-            "title": "Lab 5a: MySQL Logical Backup",
+            "title": "Lab 6a: MySQL Logical Backup",
             "filename": "../../logical-backup/logical-backup.md"
         },
         {
-            "title": "Lab 5b: MySQL Enterprise Backup",
+            "title": "Lab 6b: MySQL Enterprise Backup",
             "filename": "../../enterprise-backup/enterprise-backup.md"
         },
         {
-            "title": "Lab 6a: MySQL Replication",
+            "title": "Lab 7: MySQL Replication",
             "filename": "../../replication/replication.md"
         },
         {
-            "title": "Lab 7a: MySQL InnoDB Cluster",
+            "title": "Lab 8: MySQL InnoDB Cluster",
             "filename": "../../innodb-cluster/innodb-cluster.md"
         },
         {
-            "title": "Lab 8a: MySQL Enterprise Monitor",
+            "title": "Demo: OEM Plugin for MySQL",
             "filename": "../../enterprise-monitor-manager/enterprise-monitor-manager.md"
         },
         {
