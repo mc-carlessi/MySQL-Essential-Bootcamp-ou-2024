@@ -57,6 +57,14 @@
             "filename": "../../innodb-cluster/innodb-cluster.md"
         },
         {
+            "title": "Demo: OEM Plugin for MySQL",
+            "filename": "../../enterprise-monitor-manager/enterprise-monitor-manager.md"
+        },
+        {
+            "title": "Demo: MySQL HeatWave",
+            "filename": "../../mysql-heatwave/mysql-heatwave.md"
+        },
+        {
             "title": "Addendum 1: Troubleshooting",
             "filename": "../../addendum-troubleshooting/addendum-troubleshooting.md"
         },
