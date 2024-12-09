@@ -8,7 +8,7 @@ In this lab you will work with group profiles, which are used to create a compos
 
 MySQL Enterprise Audit provides an easy to use, policy-based auditing solution that helps implement stronger security controls and satisfy regulatory compliance.  
 
-MySQL Enterprise Masking and De-identification provides an easy to use, built-in database solution that helps creating views that protect sensitive data from unauthorized uses by hiding and replacing real values with substitutes. Before 8.0.33 Data Masking was a plugin (deprecated), now is available as component with additional options. To use the component in existing installations, please remove the plugin and all of its loadable functions to avoid conflicts (see [here](https://dev.mysql.com/doc/refman/8.0/en/data-masking-components-installation.html)).  
+MySQL Enterprise Masking and De-identification provides an easy to use, built-in database solution that helps creating views that protect sensitive data from unauthorized uses by hiding and replacing real values with substitutes. Before 8.0.33 Data Masking was a plugin (deprecated), now is available as component with additional options. To use the component in existing installations, please remove the plugin and all of its loadable functions to avoid conflicts (see [here](https://dev.mysql.com/doc/refman/8.4/en/data-masking-components-installation.html)).  
 We test here only a subset of the Data Masking functions.
 
 Estimated Lab Time: 25 minutes
@@ -92,7 +92,12 @@ In this lab, you will work with:
     <span style="color:blue">mysql></span> <copy>CALL mysql.sp_set_firewall_group_mode('fwgrp', 'PROTECTING');</copy>
     ```
 
-12. <span style="color:red">fwtest connection:</span> run these commands. Which one’s work? Which ones fail and why?
+12. <span style="color:red">Administrative connection:</span> Set mysql_firewall_trace to ON to log firewall messages in error log
+    ```
+    <span style="color:blue">mysql></span> <copy>set persist mysql_firewall_trace=on;</copy>
+    ```
+
+13. <span style="color:red">fwtest connection:</span> run these commands. Which one’s work? Which ones fail and why?
     ```
     <span style="color:blue">mysql></span> <copy>USE world;</copy>
     ```
@@ -112,22 +117,22 @@ In this lab, you will work with:
     <span style="color:blue">mysql></span> <copy>SELECT Code, Name, Region FROM country WHERE population > 200000 or 1=1;</copy>
     ```
 
-13. <span style="color:red">Administrative connection: </span>Set now firewall in **detecting** mode
+14. <span style="color:red">Administrative connection: </span>Set now firewall in **detecting** mode
     ```
-    <span style="color:blue">mysql></span> <copy>CALL mysql.sp_set_firewall_group_mode('fwtest@%', 'DETECTING');</copy>
+    <span style="color:blue">mysql></span> <copy>CALL mysql.sp_set_firewall_group_mode('fwgrp', 'DETECTING');</copy>
     ```
 
-14. Firewall messages rewuires to increase the default log level
+15. Firewall messages rewuires to increase the default log level
     ```
     <span style="color:blue">mysql></span> <copy>SET PERSIST log_error_verbosity=3;</copy>
     ```
 
-15. <span style="color:red">fwtest connection:</span> Repeat a blocked command (it works? Why?)
+16. <span style="color:red">fwtest connection:</span> Repeat a blocked command (it works? Why?)
     ```
     <span style="color:blue">mysql></span> <copy>SELECT Code, Name, Region FROM country WHERE population > 200000 or 1=1;</copy>
     ```
 
-16. <span style="color:red">Administrative connection: </span>Now exit from administrative session on mysql1 and search the error in the error log.
+17. <span style="color:red">Administrative connection: </span>Now exit from administrative session on mysql1 and search the error in the error log.
     ```
     <span style="color:blue">mysql></span> <copy>\q</copy>
     ```
@@ -135,7 +140,7 @@ In this lab, you will work with:
     <span style="color:green">shell-mysql1></span> <copy>grep "MY-011191" /mysql/log/err_log.log</copy>
     ```
 
-17. <span style="color:red">Administrative connection:</span> Error log can also be interrogated also from the client.
+18. <span style="color:red">Administrative connection:</span> Error log can also be interrogated also from the client.
     ```
     <span style="color:green">shell-mysql1></span> <copy>mysqlsh admin@mysql1:3307</copy>
     ```
@@ -143,15 +148,15 @@ In this lab, you will work with:
     <span style="color:blue">mysql></span> <copy>SELECT * FROM performance_schema.error_log WHERE ERROR_CODE='MY-011191';</copy>
     ```
 
-18. <span style="color:red">Administrative connection:</span> Disable now the firewall and exit from the client
+19. <span style="color:red">Administrative connection:</span> Disable now the firewall and exit from the client
     ```
-    <span style="color:blue">mysql></span> <copy>CALL mysql.sp_set_firewall_group_mode('fwtest@%', 'OFF');</copy>
+    <span style="color:blue">mysql></span> <copy>CALL mysql.sp_set_firewall_group_mode('fwgrp', 'OFF');</copy>
     ```
     ```
     <span style="color:blue">mysql></span> <copy>\q</copy>
     ```
  
-19. We can now close the administrative and user connections
+20. We can now close the administrative and user connections
 
     ```
     <span style="color:blue">mysql></span> <copy>\q</copy>
@@ -293,7 +298,7 @@ In this lab, you will work with:
     ```
 
 ## Learn More
-* https://dev.mysql.com/doc/refman/8.0/en/firewall-installation.html
+* https://dev.mysql.com/doc/refman/8.4/en/firewall-installation.html
 
 
 ## Acknowledgements
